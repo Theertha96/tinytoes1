@@ -77,7 +77,7 @@ def admin_home(request):
     order_by_year = Orders.objects.annotate(year=ExtractYear('created_at')).values('year').annotate(count=Count('id')).values('year', 'count')
     total_amount=Payment.objects.aggregate(total_amount=models.Sum('amount'))
     amount = float(total_amount['total_amount'])
-    print(amount)
+   
     yearNumber = []
     total_Orders = []
 

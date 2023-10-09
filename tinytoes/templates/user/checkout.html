@@ -1,0 +1,313 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Checkout<span>details</span></h1>
+        </div>
+    </div>
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/display_cart">Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">           
+               <div class="row">
+                    <div class="col-lg-9">
+                        
+                        <table id="myTable" class="table table-cart table-mobile">
+                           
+                            <h3 class="card-title my-2">Shipping Address</h3>
+                            <a class="nav-link" id="tab-add-link" href="/add_address"
+                                        >Add New address<i class="icon-edit"></i
+                                    ></a>
+                            <!-- End .card-title -->
+                           
+                            <tbody>
+                                {% for i in address %}
+                                <tr>
+                                <td class="product-col">
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                            value="{{i.id}}" type="radio"
+                                            name="flexRadioDefault" id="flexRadioDefault1" checked >
+                                    </div>
+                
+                                    <p class="ml-5">
+                                     <strong>{{ i.name }}</strong>,<br>{{ i.address}} ,<br>
+                                    {{ i.city }}, <br>
+                                    {{i.state}}. Pin:{{i.pincode}} <br>
+                                    Phone No:{{i.phone}}
+                                    
+                                    </p>
+                                    {% comment %} <a href="{% url 'payment_page' i.id  %}" class="btn btn-primary">Deliver here</a> {% endcomment %}
+                                    <a href="{% url 'delete_address' i.id %}" class="btn btn-primary">Remove</a>
+                                </td>
+                              
+                                </tr> 
+                                {% endfor %}
+                            </tbody>
+                            </table>
+
+
+
+                            <div class="cart-discount">
+                              
+                                    <p style="color: green;" id="success"></p>
+                                    <p style="color: red;" id="invalid"></p>
+                                    <div class="input-group mt-2">                                        
+                                        {% comment %} <input type="text" class="form-control" id="couponcode" name="couponcode" placeholder="coupon code" /> {% endcomment %}
+                                        <div class="input-group-append">
+                                           
+                                            </button>
+                                        </div><!-- .End .input-group-append -->
+                                    </div><!-- End .input-group -->
+                                {% comment %} </form> {% endcomment %}
+                            </div><!-- End .cart-discount -->
+                            {% comment %} <p class="mb-1">You Can use Any one coupon</p> {% endcomment %}
+                            <div class="row">
+                                {% comment %} <% coupons.forEach(coupon => { %> {% endcomment %}
+                                    <div class="col-lg-6">
+                                        <div class="card card-dashboard">
+                                            {% comment %} <div class="card-body"  > {% endcomment %}
+
+                                                 {% comment %} <h3 class="card-title" style="color: white;" >Coupon Code: <%-coupon.couponCode%></h3>  {% endcomment %}
+                                                 {% comment %} Discount Price : ₹ <%-coupon.couponAmount%><br>
+                                                 For Every Purchase above ₹ <%-coupon.minimumAmount%><br>
+                                                Coupon Valid until <%=new Date(coupon.expireDate).toLocaleDateString()%><br> {% endcomment %}
+
+                                            {% comment %} </div><!-- End .card-body --> {% endcomment %}
+                                        </div><!-- End .card-dashboard -->
+                                    </div><!-- End .col-lg-6 -->
+                                    
+                                {% comment %} <% }) %> {% endcomment %}
+                            </div>
+
+
+                    </div><!-- End .col-lg-9 -->
+
+                    
+                    <aside class="col-lg-3">
+                        <div class="summary">
+                            <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for cart_item in cart_items %}
+                                    <tr>
+                                       
+                                        <td><a href="#">{{ cart_item.Product.name }}</a></td>
+                                        {% if cart_item.Product.offer_price %}
+                                        <td>₹{{ cart_item.Product.offer_price }}</td>
+                                        {% else %}
+                                        <td>₹{{ cart_item.Product.selling_price }}</td>
+                                        {% endif %}
+                                       
+                                    </tr>
+                                    {% endfor %}
+                                    {% comment %} <tr>
+                                        <td><a href="#">Blue utility pinafore denimdress</a></td>
+                                        <td>$76,00</td>
+                                    </tr> {% endcomment %}
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td>₹{{total_total}}</td>
+                                    </tr><!-- End .summary-subtotal -->
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td>Free shipping</td>
+                                    </tr>
+                                    <tr class="summary-total">
+                                        <td>Total Including discount:</td>
+                                        <td>₹{{total_total}}</td>
+                                        <span hidden id="total_price">{{total_total}}</span>
+                                    </tr><!-- End .summary-total -->
+                                </tbody>
+                            </table><!-- End .table table-summary -->
+
+                            <div class="accordion-summary" id="accordion-payment" name="payment_method">
+                               
+                                <div class="card">
+                                    <div class="card-header" id="heading-1">                                                    
+                                        <h2 class="card-title">
+                                            <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                Razor Payment
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            {% comment %} Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account. {% endcomment %}
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                              
+
+                              
+                              
+                              
+                                <div class="card">
+                                    <div class="card-header" id="heading-2">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                Cash on delivery
+                            
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                      
+                                        
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                      
+                                        
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                           
+                                
+                                
+                                    <button id="placeOrder" value="{{cart}}" type="button"
+                                class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Proceed</span>
+                            </button>
+
+                            {% comment %} <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Proceed to Checkout</span>
+                            </button> {% endcomment %}
+                        </div><!-- End .summary -->
+                    </aside><!-- End .col-lg-3 -->
+                </div><!-- End .row -->
+        </div><!-- End .container -->
+    </div><!-- End .checkout -->
+</div><!-- End .page-content -->
+</main><!-- End .main -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+
+    $('#placeOrder').on('click', function () {
+        let cartId = $('#placeOrder').val();
+        console.log(cartId);
+        
+        let address = $('.form-check-input:checked').val();
+        console.log(address);
+        
+        let grandPriceText = $('#total_price').text(); 
+        console.log(grandPriceText);
+    
+        let paymentmethod = $('.accordion-summary .card-header .card-title a[aria-expanded="true"]').text().trim();
+        console.log(paymentmethod);
+        if(grandPriceText > 0){
+    
+        if (paymentmethod === "Razor Payment") {    //razorpay method
+            console.log("Razorpay");
+            const data = {
+                address: address,
+                grandPriceText: grandPriceText,
+                paymentmethod: paymentmethod,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            };
+            
+            $.ajax({
+                url: '{% url 'order' %}',
+                method: 'POST',
+                data: data,
+                success: function(response) {
+                     razorpay(response);
+                }
+            });
+
+        } else {  //cod method
+            const data = {
+                address: address,
+                grandPriceText: grandPriceText,
+                paymentmethod: paymentmethod,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            };
+    
+            $.ajax({
+                url: '{% url 'order' %}',
+                method: 'POST',
+                data: data,
+                success: function(response) {
+                    console.log(response);
+                    console.log("code run success");
+                    console.log(response.response.orders_id);
+                    window.location.href = '{% url 'order_success' %}?order_id=' + response.response.order_id + '&orders=' + response.response.orders_id;
+                    
+                }
+            });
+        }
+    }
+     
+
+        //razorpay function
+        function razorpay(Response) {
+            console.log( Response.response.order_id)
+           console.log(Response.response.orders_id)
+            var options = {
+                "key": Response.response.key, // Enter the Key ID generated from the Dashboard
+                "amount": Response.response.amount_paid * 100, // Amount is in currency subunits. Default currency is INR. Convert the amount accordingly
+                "currency": "INR",
+                "name": "TinyToes",
+                "order_id":Response.response.payment_id, // Pass the `id` obtained in the response of the server-side order creation
+                "handler": function(response) {
+                   
+                    window.location.href = '{% url 'order_success' %}?order_id=' + Response.response.order_id + '&orders=' + Response.response.orders_id;
+
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+    
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                // Handle Razorpay failure callback (optional)
+                console.log("Payment failed!");
+                console.log(response.error.code);
+                console.log(response.error.description);
+                console.log(response.error.source);
+                console.log(response.error.step);
+                console.log(response.error.reason);
+                console.log(response.error.metadata.order_id);
+                console.log(response.error.metadata.payment_id);
+            });
+    
+            rzp1.open();
+        }
+    });
+    
+
+</script>
+
+
+    {% endblock content %}

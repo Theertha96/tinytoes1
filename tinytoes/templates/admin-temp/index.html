@@ -1,0 +1,113 @@
+{% extends 'admin-temp/base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Dashboard </h2>
+                    {% comment %} <p>Whole data about your business here</p> {% endcomment %}
+                </div>
+              <div>
+                   
+                </div>  
+            </div>
+            
+            <div class="row">
+                <div class="col-xl-8 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Sale statistics - Total sales : {{total_amount}}</h5>
+                        
+                            <canvas id="myChart1"></canvas>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                
+                          <script>
+                            
+                            const ctx1 = document.getElementById('myChart1');
+                          
+                            new Chart(ctx1, {
+                              type: 'bar',
+                              data: {
+                                labels: {{ monthNumber|safe }},
+                                datasets: [{
+                                  label: 'Total orders by this month',
+                                  data: {{ totalOrders|safe }},
+                                  borderWidth: 1
+                                }]
+                              },
+                              options: {
+                                scales: {
+                                  y: {
+                                    beginAtZero: true
+                                  }
+                                }
+                              }
+                            });
+                          </script>
+
+                            
+                        </article>
+                    </div>
+                 </div>
+              </div>
+           </section> 
+
+
+
+
+      <section class="content-main">
+       
+           <div class="row">
+            <div class="col-xl-8 col-lg-12">
+                <div class="card mb-4">
+                    <article class="card-body">
+                        <h5 class="card-title">Sale statistics</h5>
+                        
+                    <canvas id="myChart3" height="120px"></canvas> 
+                        <canvas id="myChart3"></canvas>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
+                     
+                
+                  <script>                       
+                        const ctx2 = document.getElementById('myChart3');
+                        new Chart(ctx2, {
+                          type: 'pie',
+                          data: {
+                            labels: ['Delivered','Cancelled','New'],
+                            datasets: [{
+                            label: 'Status',
+                            data: [{{delivered_orders_number}}, {{cancelled_orders}}, {{new_orders}}],
+                            backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgb(255, 102, 204)'
+                            ],
+                            hoverOffset: 4}]
+                          },
+                          options: {
+                            scales: {
+                              y: {
+                                beginAtZero: true
+                              }
+                            }
+                          }
+                        });
+                      </script>
+
+                        
+                    </article>
+                </div>
+             </div>
+          </div>
+       
+      </section> 
+   {% endblock content %}

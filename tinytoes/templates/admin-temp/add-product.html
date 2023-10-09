@@ -1,0 +1,132 @@
+{% extends 'admin-temp/base.html' %} 
+{% load static %} 
+{% block content %}
+<div>
+  <div class="content-main" style="background-color: #f2f2f2; padding: 20px">
+    <h6 class="content-title">Add Product</h6>
+    <div class="row">
+      <div class="col-6">
+        <div class="content-header">
+          <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <div class="mb-4 " id='nummmm'>
+              <label class="form-label">Category</label>
+              {{ form.category }} 
+              {% if form.errors.category %}
+              <label class="text-danger">{{ form.errors.category }}</label>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+
+              {{form.name}} {% if form.errors.name%}
+              <label class="text-danger">{{form.errors.name}}</label>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="formFile" class="form-label"
+                >Image</label
+              >
+              {{form.product_image}} {% if form.errors.product_image%}
+              <label class="text-danger">{{form.errors.product_image}}</label>
+              {% endif %}
+            </div>
+            <div id='quant' class="mb-3">
+              <label for="quantity" class="form-label">Quantity</label>
+              {{form.quantity}} {% if form.errors.quantity%}
+              <label class="text-danger">{{form.errors.quantity}}</label>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label for="selling_price" class="form-label"
+                >Selling Price</label
+              >
+              {{form.selling_price}} {% if form.errors.selling_price %}
+              <label class="text-danger">{{ form.errors.selling_price }}</label>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label for="total_price" class="form-label">Total Price</label>
+              {{form.original_price}} {% if form.errors.original_price %}
+              <label class="text-danger"
+                >{{ form.errors.original_price }}</label
+              >
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="offer_price" class="form-label">Offer Price</label>
+              {{form.offer_price}} {% if form.errors.offer_price %}
+              <label class="text-danger"
+                >{{ form.errors.offer_price }}</label
+              >
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <div class="form-floating">
+                {{form.description}} {% if form.errors.description%}
+                <label class="text-danger">{{form.errors.description}}</label>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="form-check">
+              {{ form.is_available }}
+              {% if form.errors.is_available %}
+              <label class="text-danger">{{ form.errors.is_available }}</label>
+              {% endif %}
+              <label class="form-check-label" for="">
+                  Is available
+              </label>
+          </div>
+          
+            <div class="form-check">
+            </div>
+            <input type="file" name="product_image" multiple />
+            <button type="submit" class="btn btn-primary">Add Product</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Add white background to form fields */
+  .content-main input,
+  .content-main select,
+  .content-main textarea {
+    background-color: #ffffff;
+  }
+</style>
+<script>
+  // Wait for the DOM to fully load
+  document.addEventListener('DOMContentLoaded', function () {
+    // Select the <select> element by its ID
+      const categorySelect = document.getElementById("id_category");
+      quant=document.getElementById('quant')
+      
+    
+    // Add a change event listener to the <select> element
+    categorySelect.addEventListener("change", function () {
+      // This function will be called when the selection changes
+      const selectedValue = categorySelect.value;
+      console.log("Selected value:", selectedValue);
+      if(selectedValue == 1 ){
+        quant.style.display='none'
+      }
+      else{
+        quant.style.display='block'
+      }
+      
+      // You can perform actions based on the selected value here
+      // For example, update other elements or make an AJAX request
+    });
+  });
+</script>
+
+
+
+{% endblock content %}

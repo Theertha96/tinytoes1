@@ -1,0 +1,82 @@
+{% extends 'admin-temp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="content-main p-4" style="background-color: #f2f2f2;">
+    <h4 class="mb-4">Add New Banner</h4>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="content-header">
+          <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label">Title</label>
+              {{ form.title }}
+              {% if form.errors.title %}
+              <div class="text-danger">{{ form.errors.title }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Image</label>
+              {{ form.image }}
+              {% if form.errors.image %}
+              <div class="text-danger">{{ form.errors.image }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Link</label>
+              {{ form.link }}
+              {% if form.errors.link %}
+              <div class="text-danger">{{ form.errors.link }}</div>
+              {% endif %}
+            </div>
+             <div class="mb-3"> 
+              <label class="form-label">Order</label>
+              {{ form.order }}
+              {% if form.errors.order %}
+              <div class="text-danger">{{ form.errors.order }}</div>
+              {% endif %}
+            </div>  
+            <div class="mb-3">
+              <label class="form-label">Active</label>
+              {{ form.is_active }}
+              {% if form.errors.is_active %}
+              <div class="text-danger">{{ form.errors.is_active }}</div>
+              {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Add Banner</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .content-main {
+    border-radius: 8px;
+  }
+
+  .content-header {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    background-color: #ffffff;
+  }
+
+  .form-label {
+    font-weight: bold;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+</style>
+
+{% endblock content %}

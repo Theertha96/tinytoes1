@@ -1,0 +1,76 @@
+{% extends 'admin-temp/base.html' %} {% load static %} {% block content %}
+<div class="container mt-4">
+    <div class="content-main p-4" style="background-color: #f2f2f2;">
+      <h4 class="mb-4">Add Coupon</h4>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="content-header">
+            <form enctype="multipart/form-data" method="post">
+              {% csrf_token %}
+              <label for="discountCode">Coupon Code:</label>
+              <input type="text" id="discountCode" name="code" required>
+              <br><br>
+              <label for="discountCode">Discount amount:</label>
+              <input type="text" id="discountCode" name="discount" required>
+              <br><br>
+              
+              <label for="validFrom">Valid From:</label>
+              <input type="date" id="validFrom" name="valid_from" required>
+              <br><br>
+      
+              <label for="validTo">Valid To:</label>
+              <input type="date" id="validTo" name="valid_to" required>
+              <br><br>
+      
+              <label for="minAmount">Minimum Amount:</label>
+              <input type="number" id="minAmount" name="min_amount" step="0.01" required>
+              <br><br>
+              <label for="isActive">Is Active:</label>
+        <input type="checkbox" id="isActive" name="active" value="1">
+
+             
+              <button type="submit" class="btn btn-primary">Add Coupon</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .content-main {
+      border-radius: 8px;
+    }
+  
+    .content-header {
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      background-color: #ffffff;
+    }
+  
+    .form-label {
+      font-weight: bold;
+    }
+  
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+  
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+  </style>
+
+
+<style>
+  /* Add white background to form fields */
+  .content-main input[type="text"],
+  .content-main input[type="file"],
+  .content-main textarea {
+    background-color: #ffffff;
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,291 @@
+{% extends 'user/base.html' %} {% load static %} {% block content %}
+
+<main class="main">
+  <div
+    class="page-header text-center"
+    style="
+      background-image: url('{% static 'assets/images/page-header-bg.jpg' %}');
+    "
+  >
+    <div class="container">
+      <h1 class="page-title">My Account<span>Shop</span></h1>
+      <h5>Your Wallet Balance is:{{user.wallet}}</h5>
+    </div>
+    <!-- End .container -->
+  </div>
+  <!-- End .page-header -->
+  <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+    <div class="container">
+      <ol class="breadcrumb"></ol>
+    </div>
+    <!-- End .container -->
+  </nav>
+  <!-- End .breadcrumb-nav -->
+
+  <div class="page-content">
+    <div class="dashboard">
+      <div class="container">
+        <div class="row">
+          <aside class="col-md-4 col-lg-3">
+            <ul
+              class="nav nav-dashboard flex-column mb-3 mb-md-0"
+              role="tablist"
+            >
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  id="tab-dashboard-link"
+                  data-toggle="tab"
+                  href="#"
+                  role="tab"
+                  aria-controls="tab-dashboard"
+                  aria-selected="true"
+                  >Dashboard</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="tab-orders-link"
+                  data-toggle="tab"
+                  href="#tab-orders"
+                  role="tab"
+                  aria-controls="tab-orders"
+                  aria-selected="false"
+                  >Orders</a
+                >
+              </li>
+
+              <li class="nav-item">
+                <a
+                  href="#tab-address"
+                  class="nav-link"
+                  id="tab-address-link"
+                  data-toggle="tab"
+                  role="tab"
+                  aria-controls="tab-address"
+                  aria-selected="false"
+                  >Adresses</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="tab-account-link"
+                  data-toggle="tab"
+                  href="#tab-account"
+                  role="tab"
+                  aria-controls="tab-account"
+                  aria-selected="false"
+                  >Account Details</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user_logout">Sign Out</a>
+              </li>
+            </ul>
+          </aside>
+          <!-- End .col-lg-3 -->
+
+          <div class="col-md-8 col-lg-9">
+            <div class="tab-content">
+              <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                <div class="col-md-8 col-lg-9">
+                  <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                      {% if orders %} 
+                        <table class="table table-wishlist table-mobile" style="width: 800px;">											
+                          <thead>
+                            <tr>
+                              <th>Order number</th>
+                              <th>Price</th>
+                              <th>Date</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          {% for order in orders %}
+                          
+                          <tbody>		
+                            <tr>
+                              <td class="price-col" >  <h3 class="product-title" style="margin-left: 5px;">
+                                <a href="#">{{order.id}}</a>
+                              </h3></td>
+                              <td class="price-col">₹{{order.payment.amount}}</td>
+                              <td class="stock-col">{{order.created_at}} </td>
+                              <td class="price-col">
+                                    {% if order.status == 'Delivered' %}
+                                  <span class="badge rounded-pill bg-success">{{order.status}}</span>
+                                  {% elif order.status == 'New' %}
+                                  <span class="badge rounded-pill bg-warning">{{order.status}}</span>
+                                  {% elif order.status == 'Pending' %}
+                                  <span class="badge rounded-pill bg-danger">{{order.status}}</span>
+                                    {% elif order.status == 'Confirmed' %}
+                                  <span class="badge rounded-pill bg-success">{{order.status}}</span>
+                                  {% elif order.status == 'cancelled' %}
+                                  <span class="badge rounded-pill bg-success">{{order.status}}</span>
+                                  {% elif order.status == 'Return requested' %}
+                                  <span class="badge rounded-pill bg-success">{{order.status}}</span>
+                                  {% elif order.status == 'return rejected' %}
+                                  <span class="badge rounded-pill bg-success">{{order.status}}</span>
+                                  {% elif order.status == 'return accepted' %}
+                                  <span class="badge rounded-pill bg-success">{{order.status}}</span>
+                                  
+                                  {% endif %}
+                              </td> 
+                              
+                               <td class="action-col">
+                                 {% if order.status == 'Delivered' %}	
+                                 <form method="POST" action="{% url 'return_product' order.id %}">
+                                  {% csrf_token %}
+                                  <a href="" class="returnorder" ><button class="btn btn-outline-warning return">RETURN</button></a>
+                              </form> 
+                                {% elif order.status != 'cancelled' and order.status != 'Return requested' and order.status != 'return rejected' and order.status != 'return accepted' %}
+                                <a href="{% url 'cancel_order' order.id %}" class="cancelorder"><button class="btn btn-outline-warning return">CANCEL</button></a>
+                                {% endif %}
+                               
+                              </td> 
+      
+                            </tr>													
+                          </tbody>
+                          {% endfor %}
+                                                                   
+                        </table>                                        
+                     {%  else  %}
+                        <p>No order has been made yet.</p>
+                      {%  endif  %} 
+                        <a href="/" class="btn btn-outline-primary-2">
+                          <span>GO SHOP</span><i class="icon-long-arrow-right"></i>
+                        </a>
+                      
+                    </div>
+              <div
+                class="tab-pane fade"
+                id="tab-orders"
+                role="tabpanel"
+                aria-labelledby="tab-orders-link"
+              >
+                <div class="col-md-8 col-lg-9">
+                  <div class="tab-content">
+                    <div
+                      class="tab-pane fade show active"
+                      id="tab-orders"
+                      role="tabpanel"
+                      aria-labelledby="tab-orders-link"
+                    >
+                      <a href="/" class="btn btn-outline-primary-2">
+                        <span>GO SHOP</span
+                        ><i class="icon-long-arrow-right"></i>
+                      </a>
+                    </div>
+                    <!-- .End .tab-pane -->
+                  </div>
+                </div>
+                <!-- End .col-lg-9 -->
+              </div>
+              <!-- .End .tab-pane -->
+
+              <div
+                class="tab-pane fade"
+                id="tab-address"
+                role="tabpanel"
+                aria-labelledby="tab-address-link"
+              >
+                <p>
+                  The following addresses will be used on the checkout page by
+                  default.
+                </p>
+
+                <div class="row">
+                  <div class="col-lg-6">
+                    {% for i in address %}
+                    <div class="card card-dashboard">
+                      <div class="card-body">
+                        <h3 class="card-title">Address</h3>
+                        <!-- End .card-title -->
+
+                        {{i.name}}<br />
+                        {{i.address}}<br />
+                        {{i.city}}<br />
+                        {{i.pincode}}<br />
+                        {{i.state}}<br />
+                        {{user.email}}<br />
+                        <a
+                          href="{% url 'delete_address' i.id %}"
+                          class="btn btn-primary"
+                          >Remove</a
+                        >
+                      </div>
+                      <!-- End .card-body -->
+                    </div>
+                    <!-- End .card-dashboard -->
+                    {% endfor %}
+                  </div>
+                  <!-- End .col-lg-6 -->
+
+                  <div class="col-lg-6">
+                    <div class="card card-dashboard">
+                      <div class="card-body">
+                        <h3 class="card-title">Address</h3>
+                        <!-- End .card-title -->
+
+                        {% comment %}
+                        <p>
+                          You have not set up this type of address yet.<br />
+                          {% endcomment %}
+                          <a
+                            class="nav-link"
+                            id="tab-add-link"
+                            href="/add_address"
+                            >Add New address<i class="icon-edit"></i
+                          ></a>
+                        </p>
+                      </div>
+
+                      <!-- End .card-body -->
+                    </div>
+                    <!-- End .card-dashboard -->
+                  </div>
+                  <!-- End .col-lg-6 -->
+                  
+                  <!-- .End .tab-pane -->
+                  
+                </div>
+                
+                <!-- End .row -->
+              </div>
+              <!-- .End .tab-pane -->
+              <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                <form action="{%url 'edit_profile' %}" method="POST">
+                  {% csrf_token %}
+                    <label>Name*</label>
+                    <input type="text" name='name' class="form-control" value='{{user.name}}' required>
+                    <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+
+                    <label>Email address *</label>
+                    <input type="email" name='mail' class="form-control" value='{{user.email}}' required>
+                    <label>Change password(if needed only otherwise left blank)</label>
+                    <input type="password" name='pass' class="form-control mb-2">
+
+                    <button type="submit" class="btn btn-outline-primary-2">
+                        <span>SAVE CHANGES</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+            </div>
+
+          </div>
+          <!-- End .col-lg-9 -->
+        </div>
+        <!-- End .row -->
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .dashboard -->
+  </div>
+  <!-- End .page-content -->
+</main>
+<!-- End .main -->
+
+{% endblock content %}

@@ -1,0 +1,380 @@
+{% extends 'user/base.html' %} {% load static %} {% block content %}
+
+<main class="main">
+  <div
+    class="page-header text-center"
+    style="background-image: url('{% static 'assets/images/page-header-bg.jpg' %})"
+  >
+    <div class="container">
+      <h1 class="page-title">Shopping Cart<span>Shop</span></h1>
+    </div>
+    <!-- End .container -->
+  </div>
+  <!-- End .page-header -->
+  <nav aria-label="breadcrumb" class="breadcrumb-nav">
+    <div class="container">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/">Shop</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Shopping Cart
+        </li>
+      </ol>
+    </div>
+    <!-- End .container -->
+  </nav>
+  <!-- End .breadcrumb-nav -->
+
+  <div class="page-content">
+    <div class="cart">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9">
+            <table class="table table-cart table-mobile">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Size</th>
+                  <th>Price</th>
+                  
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for cart_item in cart_items %}
+                <tr>
+                  <td class="product-col">
+                    <div class="product">
+                      <figure class="product-media">
+                        <a href="#">
+                          <img
+                            src="{{ cart_item.Product.product_image.url }}"
+                            alt="Product image"
+                          />
+                        </a>
+                      </figure>
+
+                      <h3 class="product-title">
+                        <a href="#">{{ cart_item.Product.name }}</a>
+                      </h3>
+                      <!-- End .product-title -->
+                    </div>
+                    <!-- End .product -->
+                  </td>
+                  <td class="price-col">
+                    {{ cart_item.varient.size }}
+                  </td>
+                  {% if cart_item.Product.offer_price %}
+                  <td class="price-col">
+                    ₹{{ cart_item.Product.offer_price }}
+                  </td>
+                  {% else %}
+                  <td class="price-col">
+                    ₹{{ cart_item.Product.selling_price }}
+                  </td>
+                  {% endif %}
+                  <td class="quantity-col">
+                    <button
+                      class="cart-qty-minus value-minus"
+                      style="border: none; width: 25px"
+                      data-id="{{ cart_item.id }}"
+                      data-action="decrease"
+                      type="button"
+                    >
+                      -
+                    </button>
+                    <button
+                      class="qty value"
+                      data-id="{{ cart_item.id }}"
+                      style="cursor: default; border: none; width: 25px"
+                      type="button"
+                    >
+                      <span class="cart_item_quantity"
+                        >{{ cart_item.quantity }}</span
+                      >
+                    </button>
+                    <button
+                      class="cart-qty-plus value-plus"
+                      style="border: none; width: 25px"
+                      data-id="{{cart_item.id}}"
+                      data-action="increase"
+                      type="button"
+                    >
+                      +
+                    </button>
+                  </td>
+
+                  <td class="total-col amount total" data-id="{{cart_item.id}}">
+                    ₹<span class="sub_total">{{cart_item.sub_total}}</span>
+                  </td>
+
+                  <td class="remove-col">
+                    <a
+                      href="{% url 'remove_cart' cart_item.id %}"
+                      class="btn-remove"
+                      ><i class="icon-close"></i
+                    ></a>
+                  </td>
+                  
+                </tr>
+
+                {% endfor %}
+         
+              </tbody>
+            </table>
+            <!-- End .table table-wishlist -->
+
+            <div class="cart-bottom">
+              <div class="cart-discount">
+              
+                <div class="row">
+                
+                </div>
+              </div>
+              <!-- End .cart-discount -->
+
+            
+            </div>
+            <!-- End .cart-bottom -->
+          </div>
+          <!-- End .col-lg-9 -->
+          <aside class="col-lg-3">
+            <div class="summary summary-cart">
+              <h3 class="summary-title">Cart Total</h3>
+              <!-- End .summary-title -->
+
+              <table class="table table-summary">
+                <tbody>
+                  <tr class="summary-subtotal">
+                    <td>Subtotal:</td>
+                  
+                    <td class="cart_total" data-id="{{cart_item.id}}">
+                      ₹<span class="cart_total_value">{{ sub_total }}</span>
+                    </td>
+                    
+                  </tr>
+                  <!-- End .summary-subtotal -->
+
+                  <tr class="summary-shipping">
+                    <td>Shipping:</td>
+                    <td>&nbsp;</td>
+                  </tr>
+
+                  <tr class="summary-shipping-row">
+                    <td>
+                      <div class="">
+                        <label class="" for="free-shipping"
+                          >Free Shipping</label
+                        >
+                      </div>
+                      <!-- End .custom-control -->
+                    </td>
+                    <td>₹0.00</td>
+                  </tr>
+                  <tr class="summary-shipping-row">
+                    <td>
+                      <div class="">
+                        <label 
+                          >Discount</label
+                        >
+                      </div>
+                      <!-- End .custom-control -->
+                    </td>
+                    <td id='discount'>₹{{discount}}</td>
+                  </tr>
+                  <!-- End .summary-shipping-row -->
+
+           
+
+                  <tr class="summary-total">
+                    <td>Total:</td>
+                    <td class="cart_total" data-id="{{cart_item.id}}">
+                      ₹<span class="cart_total_value" id='grnd'>{{ total_total }}</span>
+                    </td>
+                  </tr>
+                  <input id='grand_total'  value={{ total_total }} hidden>
+                  <!-- End .summary-total -->
+                </tbody>
+                
+              </table>
+              <!-- End .table table-summary -->
+              
+              <a href="{% url 'checkout' %}" id='proceedbtn' class="btn btn-outline-primary-2 btn-order btn-block"
+                >PROCEED TO CHECKOUT</a
+              >
+            </div>
+            <!-- End .summary -->
+            <div class="cart__discount">
+              <input type="text" name="coupon" id="coupon" placeholder="Coupon code" style="padding: 5px; border: 1px solid #ccc;height:45px;">
+              <button id="apply-coupon-button"  style='background-color: black; color: #fff; border: none; padding: 10px 20px; margin-left: 5px;'>Apply</button>
+              <h6 id="coupon-id" style="padding-top:1rem;" ></h6>
+          </div>
+          <div class="coupon__list">
+			<h4>Available Coupons</h4>
+			{% if coupons %}
+
+			  <ul>
+				{% for coupon in coupons %}
+        {% if coupon.active %}
+				  <li>
+					Code:<span class="coupon-code">{{ coupon.code }}</span><br>
+					Discount:<span class="coupon-description">{{ coupon.discount }}</span>
+					<span class="coupon-value">{{ coupon.value }}</span>
+				  </li>
+          {% endif %}
+				{% endfor %}
+        
+			  </ul>
+			{% else %}
+			  <p>No available coupons.</p>
+			{% endif %}
+		  </div><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i
+            ></a>
+          </aside>
+          <!-- End .col-lg-3 -->
+        </div>
+        <!-- End .row -->
+      </div>
+      <!-- End .container -->
+    </div>
+    <!-- End .cart -->
+  </div>
+  <!-- End .page-content -->
+</main>
+<!-- End .main -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+ const total_amt = document.getElementById('grand_total').value
+ console.log(total_amt)
+ var proceed=document.getElementById('proceedbtn')
+ if(total_amt>0){
+  proceed.style.display="block"
+ }
+ else{
+  proceed.style.display="none"
+ }
+})
+</script>
+
+<script>
+  function getCookie(name) {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+		  const cookies = document.cookie.split(';');
+		  for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) === name + '=') {
+			  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+			  break;
+			}
+		  }
+		}
+		return cookieValue;
+	  }
+
+
+$(document).ready(function() {
+	$('#apply-coupon-button').click(function() {
+	  applyCoupon();
+	});
+  });
+  
+  function applyCoupon() {
+	console.log("button clicked");
+	var url = "{% url 'apply_coupon' %}";
+	var csrfToken = getCookie('csrftoken');
+	var coupon = $('#coupon').val();
+	var couponId = $('#coupon-id');
+	console.log(couponId);
+  
+  var totalPrice = parseInt(document.getElementById('grand_total').value)
+	//var totalPrice = parseInt($('#grand_total').text().replace('₹ ', ''));
+	console.log(totalPrice);
+  
+	$.ajax({
+	  url: url,
+	  type: 'POST',
+	  dataType: 'json',
+	  headers: {
+		'Content-type': 'application/json',
+		'X-CSRFToken': csrfToken
+	  },
+	  data: JSON.stringify({
+		coupon: coupon,
+		grand_total: totalPrice
+	  }),
+	  success: function(response) {
+		if (response) {
+			console.log(response.total)
+			console.log(response.discount)
+		  couponId.html(response.message);
+
+		  $('#grnd').text( response.total);
+		  $('#discount').text('₹ ' + response.discount);
+		 
+		  
+		}
+	  },
+	  error: function() {
+		console.log('Error');
+	  }
+	});
+  }
+
+  $(".value-plus").on("click", function () {
+    console.log("plus function working");
+    var cartItemId = $(this).data("id");
+    var action = $(this).data("action");
+    console.log(cartItemId);
+    updateCartItemQuantity(cartItemId, action);
+  });
+
+  $(".value-minus").on("click", function () {
+    console.log("minus function working");
+    var cartItemId = $(this).data("id");
+    var action = $(this).data("action");
+    console.log(cartItemId);
+    updateCartItemQuantity(cartItemId, action);
+  });
+  function updateCartItemQuantity(cartItemId, action) {
+    $.ajax({
+      url: "{% url 'update_cart_item_quantity' %}",
+      method: "GET",
+      data: {
+        cart_item_id: cartItemId,
+        action: action,
+      },
+      success: function (response) {
+        if (response.status === 200) {
+          // Update the quantity value in the template
+          var quantitySpan = $('.value[data-id="' + cartItemId + '"] span');
+          quantitySpan.text(response.quantity);
+          console.log(response.quantity);
+
+          // update total price in template
+          var totalspan = $('.total[data-id="' + cartItemId + '"] span');
+         
+          totalspan.text(response.subtotal);
+          console.log("kk",response.subtotal);
+          var carttotalspan = $(".cart_total");
+          
+          carttotalspan.text('₹' + response.total_total);
+          $("#discount").text('₹0.00')
+          console.log("ll",response.total_total);
+
+        }
+      },
+    });
+  }
+</script>
+
+{% endblock content %}

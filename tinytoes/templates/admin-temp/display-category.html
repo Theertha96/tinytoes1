@@ -1,0 +1,50 @@
+{% extends 'admin-temp/base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<div class="content-main" style="background-color: #f2f2f2; padding: 20px; height: 400px; display: flex; flex-direction: column;">
+    <div class="table-responsive" style="overflow-x: auto;">
+        <table class="table" id='example1'>
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Category Name</th>
+                    {% comment %} <th scope="col">Category Image</th> {% endcomment %}
+                    <th scope="col">Category Description</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in categories %}
+                <tr>
+                    <th scope="row">{{product.id}}</th>
+                    <td>{{product.name}}</td>
+                    {% comment %} <td>{{product.image}}</td> {% endcomment %}
+                    <td>{{product.description}}</td>
+                    <td>
+                        <a href="{% url 'update_category' product.id %}" class="btn btn-light">Update</a>
+                        <a href="{% url 'delete_category' product.id %}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-top: auto;">
+        <a href="add_category" class="btn btn-primary">Add Category</a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+      $('#example1').DataTable();
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'admin-temp/base.html' %} {% load static %} {% block content %}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<div class="table-responsive" style="overflow-x: auto">
+  <div
+    class="content-main"
+    style="background-color: #f2f2f2; padding: 20px; height: 400px"
+  >
+    <table class="table">
+      <div class="row">
+        <div class="col-6">
+          <div class="content-header">
+            <h6 class="content-title">Products</h6>
+            <div class="table-responsive">
+              <div>
+                <a href="add_product" class="btn btn-primary mt-3"
+                  >Add Product</a
+                >
+              </div>
+
+              <table class="table" id='example1'>
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Product Image</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Offer Price</th>
+                    <th scope="col">Add varient</th>
+                    <th scope="col">View varient</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Soft delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in products %}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+
+                    <td>
+                      <img
+                        style="width: 30px; height: 30px"
+                        src="{{product.product_image.url}}"
+                      />
+                    </td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.quantity}}</td>
+                    <td>{{product.original_price}}</td>
+                    <td>{{product.offer_price}}</td>
+
+                    {% if product.category.id == 1 %} 
+        
+                    <td>
+                      <a
+                        href=" {% url 'varient' product.id %}"
+                        class="btn btn-light"
+                        >Add Varient</a
+                      >
+                    </td>
+                    <td>
+                      <a
+                        href=" {% url 'show_varient' product.id %}"
+                        class="btn btn-light"
+                        > View Varient</a
+                      >
+                    </td>
+                    {% else %}
+                    <td>
+                      <a
+                        href=" {% url 'varient' product.id %}"
+                        class="btn btn-light" style="pointer-events: none; color:grey"
+                        >No Varients</a
+                      >
+                    </td>
+                    <td>
+                      <a
+                        href=" {% url 'show_varient' product.id %}"
+                        class="btn btn-light" style="pointer-events: none; color:grey"
+                        > Unavailable</a
+                      >
+                    </td>
+                    {% endif %}
+                    <td>
+                      <a
+                        href=" {% url 'update_product' product.id %}"
+                        class="btn btn-light"
+                        >Update</a
+                      >
+                    </td>
+                    <td>
+                      {% if product.is_active %}
+                      <a
+                        href="{% url 'delete_product' product.id %}"
+                        class="btn btn-danger"
+                        >Delete</a
+                      >
+                      {% else %}
+                      <a
+                      href="{% url 'undodelete_product' product.id %}"
+                      class="btn btn-success"
+                      >Undo</a
+                    >
+                    {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#example1').DataTable();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'admin-temp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-main" style="background-color: #f2f2f2; padding: 20px;">
+    <div><h6 class="content-title">Update Product</h6></div>
+    <div><br/></div>
+    <div class="row">
+        <div class="col-6">
+            <div class="content-header">
+
+                <form enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        {{ form.category }}
+                        {% if form.errors.category %}
+                        <label class="text-danger">{{ form.errors.category }}</label>
+                        {% endif %}
+                    </div>
+                  
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        {{ form.name }}
+                        {% if form.errors.name %}
+                        <label class="text-danger">{{ form.errors.name }}</label>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Default Image</label>
+                        {{ form.product_image }}
+                        {% if form.errors.product_image %}
+                        <label class="text-danger">{{ form.errors.product_image }}</label>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        {{ form.quantity }}
+                        {% if form.errors.quantity %}
+                        <label class="text-danger">{{ form.errors.quantity }}</label>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="selling_price" class="form-label">Selling price</label>
+                        {{ form.selling_price }}
+                        {% if form.errors.selling_price %}
+                        <label class="text-danger">{{ form.errors.selling_price }}</label>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="total_price" class="form-label">Total price</label>
+                        {{ form.original_price }}
+                        {% if form.errors.original_price %}
+                        <label class="text-danger">{{ form.errors.original_price }}</label>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="offer_price" class="form-label">Offer price</label>
+                        {{ form.offer_price }}
+                        {% if form.errors.offer_price %}
+                        <label class="text-danger">{{ form.errors.offer_price }}</label>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <div class="form-floating">
+                            {{ form.description }}
+                            {% if form.errors.description %}
+                            <label class="text-danger">{{ form.errors.description }}</label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        {{ form.trending }}
+                        {% if form.errors.trending %}
+                        <label class="text-danger">{{ form.errors.trending }}</label>
+                        {% endif %}
+                    </div>
+                    <div class="form-check">
+                        {{ form.is_available }}
+                        {% if form.errors.is_available %}
+                        <label class="text-danger">{{ form.errors.is_available }}</label>
+                        {% endif %}
+                        <label class="form-check-label" for="">
+                            Is available
+                        </label>
+                    </div>
+                  
+                        {{ image_form.management_form }}
+                        {% for form in image_form %}
+                        {{ form.as_p }}
+                        {% endfor %}
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

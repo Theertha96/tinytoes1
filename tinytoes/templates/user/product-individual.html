@@ -1,0 +1,166 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block content %}
+    <br>
+    <br>
+    <main class="main">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+            <div class="container d-flex align-items-center">
+                <ol class="breadcrumb">
+                    <!-- Breadcrumb items can go here -->
+                </ol>
+
+                <nav class="product-pager ml-auto" aria-label="Product">
+                    <!-- Product pager navigation can go here -->
+                </nav><!-- End .pager-nav -->
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="container">
+                <div class="product-details-top mb-2">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="product-gallery product-gallery-vertical">
+                                <div class="row">
+                                    <figure class="product-main-image">
+                                        <img id="product-zoom" src="{{ product.product_image.url }}" data-zoom-image="{{ product.product_image.url }}" alt="product image">
+                                        <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                                            <i class="icon-arrows"></i>
+                                        </a>
+                                    </figure><!-- End .product-main-image -->
+                                    <div id="product-zoom-gallery" class="product-image-gallery">
+                                        {% for image in images %}
+                                            <a class="product-gallery-item" href="#" data-image="{{ image.image.url }}" data-zoom-image="{{ image.image.url }}">
+                                                <img src="{{ image.image.url }}" alt="product cross">
+                                            </a>
+                                        {% endfor %}
+                                    </div><!-- End .product-image-gallery -->
+                                </div><!-- End .row -->
+                            </div><!-- End .product-gallery -->
+                        </div><!-- End .col-md-6 -->
+
+                        <div class="col-md-6">
+                            <div class="product-details product-details-centered">
+                                <h1 class="product-title">{{ product.name }}</h1><!-- End .product-title -->
+                                <div class="ratings-container">
+                                    <!-- Ratings and reviews can go here -->
+                                </div>
+                                {% if product.offer_price %}
+                                <del style="color:grey ;font-size: 15px;" class="product-price">
+                                    ₹{{ product.selling_price }}
+                                </del><!-- End .product-price -->
+                                <div class="product-price">
+                                    ₹{{ product.offer_price }}
+                                </div>
+                                
+                                {% else %}
+                                <div class="product-price">
+                                    ₹{{ product.selling_price }}
+                                </div><!-- End .product-price -->
+                                {% endif %}
+                                <div class="product-content">
+                                    <p>{{ product.description }}</p>
+                                </div><!-- End .product-content -->
+
+                                
+                                <div class="product-details-action">
+                                    {% if variants %}
+                                    <div class="details-filter-row details-row-size">
+                                        <label for="age-group">Select Age Group:</label>
+                                        <select id="age-group" class="form-control">
+                                            {% for varient in variants%}
+                                            <option value="{{varient.size}}">{{varient.size}}</option>
+                                           {% endfor%}
+                                        </select>
+                                    </div><!-- End .details-filter-row -->
+                                    {% endif %}
+                                    <div class="details-action-col">
+                                        {% if product.is_active %}
+                                        <button id="addToCartBtn" class="add-to-cart-button btn btn-product btn-cart" data-id={{product.id}} >Add To Cart</button>
+                                        {% else %}
+                                        <button disabled id="addToCartBtn" class="add-to-cart-button btn btn-product btn-cart" data-id={{product.id}} >Not available</button>
+                                        {% endif %}
+                                        <span class="added-to-cart-msg hidden" id="added-to-cart-msg">
+                                            <i class="fa fa-check"></i>
+                                        </span>
+                                    </div><!-- End .details-action-col -->
+                                    <div class="details-action-wrapper">
+                                        <!-- Additional product details actions can go here -->
+                                    </div><!-- End .details-action-wrapper -->
+                                </div><!-- End .product-details-action -->
+                            </div><!-- End .product-details -->
+                        </div><!-- End .col-md-6 -->
+                    </div><!-- End .row -->
+                </div><!-- End .product-details-top -->
+            </div><!-- End .container -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        
+    
+        $(".add-to-cart-button").on('click', function() {
+            console.log("add to cart button clicked")
+        
+            var product_id = $(this).data('id');
+            var size = $("#age-group").val();
+            console.log(product_id);
+            console.log(size);
+    
+        
+            data = {
+                "product_id": product_id,
+                "size": size
+                
+            };
+        
+            $.ajax({
+                url: "{% url 'add_to_cart' %}",
+                method: "GET",
+                data: data,
+        
+                success: function(data) {
+                    console.log("code run success");
+                    console.log(data.status);
+                    console.log(data.message);
+                }
+            });
+        
+            // Update the displayed price in the cart
+            $("#price").text(price);
+        });
+       
+    
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+  const addToCartBtn = document.getElementById('addToCartBtn');
+
+  addToCartBtn.addEventListener('click', function () {
+    // Display a SweetAlert confirmation dialog
+    Swal.fire({
+      title: 'Add to Cart?',
+      text: 'Are you sure you want to add this item to your cart?',
+      icon: 'question',
+      //showCancelButton: true,
+      confirmButtonText: 'Yes, add it!',
+      //cancelButtonText: 'No, cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Perform your "Add to Cart" functionality here
+        // You can update the button text and style as needed
+        
+      }
+    });
+  });
+</script>
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="path/to/elevatezoom.js"></script> <!-- Make sure to include the elevateZoom library -->
+    
+{% endblock content %}

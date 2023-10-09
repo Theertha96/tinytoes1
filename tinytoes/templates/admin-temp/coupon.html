@@ -1,0 +1,71 @@
+{% extends 'admin-temp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+<div class="table-responsive" style="overflow-x: auto">
+  <div class="content-main" style="background-color: #f2f2f2; padding: 20px; height: 400px">
+    <table class="table">
+      <div class="row">
+        <div class="col-6">
+          <div class="content-header">
+            <h6 class="content-title">Banners</h6>
+            <div class="table-responsive">
+              <div>
+                <a href="{% url 'add_coupons' %}" class="btn btn-primary mt-3">Add Coupon</a>
+              </div>
+
+              <table class="table" id='example4'>
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Coupon name</th>
+                    <th scope="col">Minimum amount</th>
+                    <th scope="col">Discount amount</th>
+                    <th scope="col">Valid from</th>
+                    <th scope="col">Valid to</th>
+                    <th scope="col">Options</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for coupon in coupons %}
+                  <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ coupon.code }}</td>
+                    <td>{{  coupon.min_amount }}</td>
+                    <td>{{ coupon.discount }}</td>
+                    <td>{{ coupon.valid_from }}</td>
+                    <td>{{ coupon.valid_to }}</td>
+                    <td>
+                        {% if coupon.active == True  %}
+                      <a href="{%url 'deactivate_coupon' coupon.id %}" class="btn btn-light">Deactivate</a>
+                      {% else  %}
+                      <a href="{%url 'activate_coupon' coupon.id %}" class="btn btn-light">Activate</a>
+                      {% endif %}
+                      <a href="{%url 'delete_coupon' coupon.id %}" class="btn btn-danger">Delete</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </table>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#example4').DataTable();
+  });
+</script>
+{% endblock %}

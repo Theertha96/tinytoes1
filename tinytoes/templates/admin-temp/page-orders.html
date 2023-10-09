@@ -1,0 +1,114 @@
+{% extends 'admin-temp/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order List </h2>
+                    {% comment %} <p>Lorem ipsum dolor sit amet.</p> {% endcomment %}
+                </div>
+                {% comment %} <div>
+                    <input type="text" placeholder="Search order ID" class="form-control bg-white">
+                </div> {% endcomment %}
+            </div>
+            <div class="card mb-4">
+                {% comment %} <header class="card-header">
+                    <div class="row gx-3">
+                        <div class="col-lg-4 col-md-6 me-auto">
+                            <input type="text" placeholder="Search..." class="form-control">
+                        </div>
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select">
+                                <option>Status</option>
+                                <option>Active</option>
+                                <option>Disabled</option>
+                                <option>Show all</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-6 col-md-3">
+                            <select class="form-select">
+                                <option>Show 20</option>
+                                <option>Show 30</option>
+                                <option>Show 40</option>
+                            </select>
+                        </div>
+                    </div>
+                </header> <!-- card-header end// --> {% endcomment %}
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id='example2'>
+                            <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Status</th> 
+                                    <th scope="col">Change Status</th> 
+                                    <th scope="col">Apply Changes</th> 
+                                    <th scope="col">Details</th> 
+                                    {% comment %} <th scope="col" class="text-end"> Status </th> {% endcomment %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in orders %}       
+                                <tr>
+                                    <td>{{i.id}}</td>
+                                    <td><b>{{i.user.name}}</b></td>
+                                    <td><b>{{i.user.email}}</b></td>
+                                    {% comment %} <td><template class="__cf_email__" data-cfemail="b7dbd2c4dbded2f7d2cfd6dac7dbd299d4d8da">[{{i.user.email}}&#160;protected]</template></td> {% endcomment %}
+                                    <td>${{i.payment.amount}}</td>
+                                    {% comment %} <td><span class="badge rounded-pill alert-warning">{{i.status}}</span></td> {% endcomment %}
+                                    <td>{{i.created_at}}</td>
+                                    <td <span class="badge rounded-pill alert-warning"  style="color:> {% if i.status == 'New' %}blue{% elif i.status == 'Delivered' %}green{% elif i.status == 'Pending' %}orange{% elif i.status == 'Cancelled' %}red{% endif %}">{{ i.status }}</span></td>
+                                    <td class="text-end"> 
+                                       
+                                        <div class="dropdown">
+                                            <form method="POST" action="{% url 'edit_order' i.id %}">
+                                                {% csrf_token %}
+                                                <select name="status">
+                                                    {% if i.status != 'Return requested' and i.status != 'return rejected' and i.status != 'return accepted' %}
+                                                    <option value="New" class="dropdown-item" {% if i.status == 'New' %}selected{% endif %}>New</option>
+                                                    <option value="Pending" {% if i.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                                    <option value="Confirmed" {% if i.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                                    <option value="out for shipping" {% if i.status == 'out for shipping' %}selected{% endif %}>out for shipping'</option>
+                                                    <option value="Delivered" {% if i.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                                    <option value="Cancelled" {% if i.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                                    {% else %}
+                                                    <option value="Return requested" class="dropdown-item" {% if i.status == 'Return requested' %}selected{% endif %}>Return requested</option>
+                                                    <option value="return rejected" class="dropdown-item" {% if i.status == 'return rejected' %}selected{% endif %}>Reject return</option>
+                                                    <option value="return accepted" class="dropdown-item" {% if i.status == 'return accepted' %}selected{% endif %}>Accept return</option>
+
+
+                                                {% endif %}
+                                                
+                                                </select>
+                                                <td><button class="btn btn-md rounded font-sm" type="submit">Change</button></td>
+                                            </form> 
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'order_detail' i.id %}" class="btn btn-md rounded font-sm">Details</a>
+                                    </td>
+                                </tr>
+                              {% endfor %} 
+                            </tbody>
+                        </table>
+                    </div> <!-- table-responsive //end -->
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+           
+        </section> <!-- content-main end// -->
+        <script>
+            $(document).ready(function() {
+              $('#example2').DataTable();
+            });
+        </script>
+        {% endblock content %}

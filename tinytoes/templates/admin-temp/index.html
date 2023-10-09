@@ -24,9 +24,9 @@
                     <div class="card mb-4">
                         <article class="card-body">
                           {{if total_amount}}
-                            <h5 class="card-title">Sale statistics - Total sales : Not Available</h5>
+                            <h5 class="card-title">Sale statistics - Total sales : {{total_amount}}</h5>
                         {{else}}
-                        <h5 class="card-title">Sale statistics - Total sales : {{total_amount}}</h5>
+                        <h5 class="card-title">Sale statistics - Total sales : Not Available</h5>
                         {{endif}}
                             <canvas id="myChart1"></canvas>
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
